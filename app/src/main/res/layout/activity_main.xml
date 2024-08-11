@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/red"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    tools:context=".MainActivity">
+    <TextView
+        android:layout_marginTop="100dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textAlignment="center"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="!Expense Tracker!"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:layout_marginTop="12dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LOGIN"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <EditText
+        android:id="@+id/email_login"
+        android:layout_marginTop="20dp"
+        android:padding="15dp"
+        android:background="@drawable/edit_text_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your Email Here"/>
+    <EditText
+        android:id="@+id/password_login"
+        android:layout_marginTop="12dp"
+        android:padding="15dp"
+        android:background="@drawable/edit_text_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your Password Here"/>
+<Button
+    android:id="@+id/btn_login"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="12dp"
+    android:textColor="@color/white"
+    android:text="LOGIN"
+    android:backgroundTint="@color/orange"
+    android:layout_gravity="center"/>
+    <TextView
+        android:id="@+id/forgotPassword"
+        android:text="Forgot Password?"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/white"
+        android:gravity="center" />
+
+<TextView
+     android:id="@+id/goToSignupScreen"
+     android:text="Already have an account? Sign Up"
+     android:layout_height="wrap_content"
+     android:layout_width="match_parent"
+     android:layout_marginTop="12dp"
+     android:textColor="@color/white"
+     android:gravity="center" />
+
+
+  </LinearLayout>
