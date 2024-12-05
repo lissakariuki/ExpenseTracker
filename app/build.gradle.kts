@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.expensemanager"
-        minSdk = 21
+        minSdk = 26  // Updated this line to match required SDK version
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
