@@ -1,6 +1,5 @@
 package com.example.expensemanager;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,57 +8,47 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.MyViewHolder>{
-    Context context;
-    ArrayList<TransactionModel> transactionModelArrayList;
+public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
 
-    public TransactionAdapter(Context context, ArrayList<TransactionModel> transactionModelArrayList){
-        this.context=context;
-        this.transactionModelArrayList= transactionModelArrayList;
+    private final List<TransactionModel> transactionList;
+
+    public TransactionAdapter(List<TransactionModel> transactionList) {
+        this.transactionList = transactionList;
     }
+
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.one_recycler_item,parent,false);
-        return new MyViewHolder(view);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_transaction, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        TransactionModel model=transactionModelArrayList.get(position);
-        String priority=model.getType();
-        if (priority.equals("Expense")){
-            holder.priority.setBackgroundResource(R.drawable.red_shape);
-        }
-        else {
-            holder.priority.setBackgroundResource(R.drawable.green_shape);
-        }
-        holder.amount.setText(model.getAmount());
-        holder.date.setText(model.getDate());
-        holder.note.setText(model.getNote());
-
-
-
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        TransactionModel transaction = transactionList.get(position);
+        holder.noteTextView.setText(transaction.getNote());
+        holder.amountTextView.setText(String.format("$%s", transaction.getAmount()));
+        holder.typeTextView.setText(transaction.getType());
+        holder.categoryTextView.setText(transaction.getCategory());
     }
 
     @Override
     public int getItemCount() {
-        return transactionModelArrayList.size();
+        return transactionList.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView note,amount, date;
-        View priority;
-        public MyViewHolder(@NonNull View itemView) {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView noteTextView, amountTextView, typeTextView, categoryTextView;
+
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            note=itemView.findViewById(R.id.note_one);
-            amount=itemView.findViewById(R.id.amount_one);
-            date=itemView.findViewById(R.id.date_one);
-            priority=itemView.findViewById(R.id.priority_one);
+            noteTextView = itemView.findViewById(R.id.transactionNote);
+            amountTextView = itemView.findViewById(R.id.transactionAmount);
+            typeTextView = itemView.findViewById(R.id.transactionType);
+            categoryTextView = itemView.findViewById(R.id.transactionCategory);
         }
     }
-
-        }
-
+}
