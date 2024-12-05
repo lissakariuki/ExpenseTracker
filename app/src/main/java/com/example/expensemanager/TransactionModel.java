@@ -4,7 +4,7 @@ public class TransactionModel {
     private double amount;
     private String note;
     private String category;
-    private String transactionType; // "Income" or "Expense"
+    private String Type; // "Income" or "Expense"
     private long timestamp; // Unix timestamp or any time format
 
     // Getters and Setters
@@ -32,12 +32,12 @@ public class TransactionModel {
         this.category = category;
     }
 
-    public String getTransactionType() {
-        return transactionType;
+    public String getType() {
+        return Type;
     }
 
-    public void setTransactionType(String transactionType) {
-        this.transactionType = transactionType;
+    public void setType(String transactionType) {
+        this.Type = transactionType;
     }
 
     public long getTimestamp() {

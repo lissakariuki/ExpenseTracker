@@ -1,8 +1,11 @@
 package com.example.expensemanager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -48,11 +51,33 @@ public class Dashboard extends AppCompatActivity {
         // Load data from Firestore
         loadTransactions();
 
-        // Set back button functionality
-        findViewById(R.id.btnAddTransaction).setOnClickListener(view -> {
-            // Handle Add Transaction button click
-            // Open Add Transaction Activity (implement as necessary)
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
+
+        // Set up the "Add Transaction" button click listener
+        Button btnAddTransaction = findViewById(R.id.btnAddTransaction);
+        btnAddTransaction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an Intent to open AddTransactionActivity
+                Intent intent = new Intent(Dashboard.this, addtransactionactivity.class);
+                startActivity(intent); // This will open AddTransactionActivity
+            }
         });
+    }
+
+    // Handle ActionBar back button press
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed(); // Goes back to the previous activity
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void loadTransactions() {
