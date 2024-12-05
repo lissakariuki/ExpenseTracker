@@ -12,7 +12,8 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.ExpenseManager">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -21,27 +22,33 @@
 
         <activity
             android:name=".Dashboard"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.ExpenseManager" />
 
         <activity
             android:name=".ChartActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.ExpenseManager" />
 
         <activity
             android:name=".CalendarActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.ExpenseManager" />
 
         <activity
             android:name=".InsightsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.ExpenseManager" />
 
         <activity
             android:name=".addtransactionactivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.ExpenseManager" />
 
         <activity
             android:name=".Signup"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.ExpenseManager" />
 
     </application>
 
