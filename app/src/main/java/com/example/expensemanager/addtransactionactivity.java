@@ -1,157 +1,99 @@
 package com.example.expensemanager;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
-import com.example.expensemanager.databinding.ActivityAddtransactionactivityBinding;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 import java.util.UUID;
 
 public class addtransactionactivity extends AppCompatActivity {
-    private static final String TAG = "AddTransactionActivity";
-    ActivityAddtransactionactivityBinding binding;
-    FirebaseFirestore fStore;
-    String type = "";
-    FirebaseAuth firebaseAuth;
-    FirebaseUser firebaseUser;
+
+    private TextInputEditText amountInput, noteInput;
+    private AutoCompleteTextView categorySpinner;
+    private RadioGroup typeGroup;
+    private MaterialButton addButton;
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityAddtransactionactivityBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_addtransactionactivity);
 
-        fStore = FirebaseFirestore.getInstance();
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        if (firebaseUser == null) {
-            Log.e(TAG, "No user is signed in");
-            Toast.makeText(this, "No user signed in. Please login again.", Toast.LENGTH_LONG).show();
-            finish();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        amountInput = findViewById(R.id.user_amount_add);
+        noteInput = findViewById(R.id.user_note_add);
+        categorySpinner = findViewById(R.id.category_spinner);
+        typeGroup = findViewById(R.id.transaction_type_group);
+        addButton = findViewById(R.id.btn_add_transaction);
+
+        setupCategorySpinner();
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addTransaction();
+            }
+        });
+    }
+
+    private void setupCategorySpinner() {
+        String[] categories = {"Food", "Transportation", "Housing", "Utilities", "Insurance", "Healthcare", "Savings", "Personal", "Entertainment", "Other"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, categories);
+        categorySpinner.setAdapter(adapter);
+    }
+
+    private void addTransaction() {
+        String amountStr = amountInput.getText().toString();
+        String note = noteInput.getText().toString();
+        String category = categorySpinner.getText().toString();
+        String type = typeGroup.getCheckedRadioButtonId() == R.id.expense_radio_button ? "Expense" : "Income";
+
+        if (amountStr.isEmpty() || category.isEmpty()) {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Log.d(TAG, "Current user ID: " + firebaseUser.getUid());
-
-        setupCheckBoxListeners();
-        setupAddTransactionButton();
-    }
-
-    private void setupCheckBoxListeners() {
-        binding.expenseCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                type = "Expense";
-                binding.expenseCheckBox.setChecked(true);
-                binding.incomeCheckBox.setChecked(false);
-            }
-        });
-
-        binding.incomeCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                type = "Income";
-                binding.expenseCheckBox.setChecked(false);
-                binding.incomeCheckBox.setChecked(true);
-            }
-        });
-    }
-
-    private void setupAddTransactionButton() {
-        binding.btnAddTransaction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String amount = binding.userAmountAdd.getText().toString().trim();
-                String note = binding.userNoteAdd.getText().toString().trim();
-
-                if (amount.isEmpty()) {
-                    Toast.makeText(addtransactionactivity.this, "Please enter an amount", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (type.isEmpty()) {
-                    Toast.makeText(addtransactionactivity.this, "Please select a transaction type", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                addTransaction(amount, note, type);
-            }
-        });
-    }
-
-    private void addTransaction(String amount, String note, String type) {
-        if (firebaseUser == null) {
-            Log.e(TAG, "Attempt to add transaction without user authentication");
-            Toast.makeText(this, "Error: User not authenticated", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MM yyyy_HH:mm", Locale.getDefault());
-        String currentDateandTime = sdf.format(new Date());
+        double amount = Double.parseDouble(amountStr);
         String id = UUID.randomUUID().toString();
+        //Date date = new Date(); //Removed Date from TransactionModel
 
-        Map<String, Object> transaction = new HashMap<>();
-        transaction.put("id", id);
-        transaction.put("amount", amount);
-        transaction.put("note", note);
-        transaction.put("type", type);
-        transaction.put("date", currentDateandTime);
+        TransactionModel transaction = new TransactionModel(id, note, String.valueOf(amount), type, category);
 
-        String userId = firebaseUser.getUid();
-        Log.d(TAG, "Attempting to add transaction: " + transaction.toString());
-        Log.d(TAG, "User ID: " + userId);
-        Log.d(TAG, "Collection path: Expenses/" + userId + "/Notes/" + id);
-
-        fStore.collection("Expenses")
-                .document(userId)
-                .collection("Notes")
-                .document(id)
-                .set(transaction)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "Transaction added successfully");
-                        Toast.makeText(addtransactionactivity.this, "Transaction added", Toast.LENGTH_SHORT).show();
-                        clearInputFields();
-                    }
+        String userId = mAuth.getCurrentUser().getUid();
+        mDatabase.child("users").child(userId).child("transactions").child(id).setValue(transaction)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(addtransactionactivity.this, "Transaction added successfully", Toast.LENGTH_SHORT).show();
+                    finish();
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Error adding transaction", e);
-                        if (e instanceof FirebaseFirestoreException) {
-                            FirebaseFirestoreException ffe = (FirebaseFirestoreException) e;
-                            Log.e(TAG, "Firestore Exception Code: " + ffe.getCode());
-                        }
-                        Log.e(TAG, "Error details: " + e.getMessage());
-                        Toast.makeText(addtransactionactivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .addOnFailureListener(e -> Toast.makeText(addtransactionactivity.this, "Failed to add transaction", Toast.LENGTH_SHORT).show());
     }
 
-    private void clearInputFields() {
-        binding.userNoteAdd.setText("");
-        binding.userAmountAdd.setText("");
-        binding.expenseCheckBox.setChecked(false);
-        binding.incomeCheckBox.setChecked(false);
-        type = "";
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }
 

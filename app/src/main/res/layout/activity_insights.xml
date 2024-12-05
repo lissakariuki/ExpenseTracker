@@ -14,7 +14,6 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:title="Calendar"
             app:titleTextColor="?attr/colorOnPrimary"/>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -24,11 +23,12 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- Add your calendar view here -->
-        <CalendarView
-            android:id="@+id/calendarView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Insights Content Goes Here"
+            android:textSize="18sp"/>
 
     </androidx.core.widget.NestedScrollView>
 
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/white"
-        app:menu="@drawable/bottom_nav_colors"/>
+        app:menu="@menu/bottom_nav_menu"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

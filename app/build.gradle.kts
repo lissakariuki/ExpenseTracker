@@ -1,6 +1,5 @@
 plugins {
     id("com.android.application")
-    //id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
 }
 
@@ -20,16 +19,13 @@ android {
 
     buildFeatures {
         viewBinding = true
-        dataBinding = true
+        buildConfig = true
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 
@@ -40,13 +36,13 @@ android {
 }
 
 dependencies {
-    //implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.20")
-    implementation("androidx.core:core:1.12.0")
+    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("com.google.firebase:firebase-auth-ktx:22.1.2")
-    implementation("com.google.firebase:firebase-firestore-ktx:24.9.1")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-database")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

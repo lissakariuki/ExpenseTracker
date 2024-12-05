@@ -1,27 +1,41 @@
 package com.example.expensemanager;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import com.example.expensemanager.databinding.ActivityCalendarBinding;
+import androidx.appcompat.widget.Toolbar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class CalendarActivity extends AppCompatActivity {
-    private ActivityCalendarBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityCalendarBinding.inflate(getLayoutInflater());
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_calendar);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+        //setContentView(R.layout.activity_calendar); //Removed this line as per update instruction.  The layout should be set elsewhere or handled differently.
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Calendar");
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
+        bottomNavigationView.setSelectedItemId(R.id.navigation_calendar);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.navigation_dashboard:
+                    startActivity(new Intent(this, Dashboard.class));
+                    finish();
+                    return true;
+                case R.id.navigation_chart:
+                    startActivity(new Intent(this, ChartActivity.class));
+                    finish();
+                    return true;
+                case R.id.navigation_insights:
+                    startActivity(new Intent(this, InsightsActivity.class));
+                    finish();
+                    return true;
+            }
+            return false;
         });
     }
 }
+
